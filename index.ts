@@ -12,6 +12,9 @@ interface IPos {
 function getPos(sp: number, x_: number, y_: number): IPos {
     return { x: leftm + sp * x_, y: size + topm - sp * y_ }
 }
+function mod(a: number, b: number): number {
+    return ((a % b) + b) % b;
+}
 
 function draw() {
     if (ctx == null) return;
@@ -39,11 +42,15 @@ function draw() {
     }
     for (var i = 0; i < m; i++) {
         for (var j = 0; j < m; j++) {
-            if ((a * i + b * j) % m <= c % m) {
+            if (mod(a * i + b * j, m) <= mod(c, m)) {
                 ctx.beginPath();
                 var p = getPos(sp, i, j);
                 ctx.arc(p.x, p.y, sp / 3, 0, 2 * Math.PI, false);
-                ctx.fillStyle = "Red";
+                if (0 <= a * i + b * j && a * i + b * j < m && c < m) {
+                    ctx.fillStyle = "Blue";
+                } else {
+                    ctx.fillStyle = "Red";
+                }
                 ctx.fill();
             }
         }
